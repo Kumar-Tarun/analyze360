@@ -7,7 +7,7 @@ It has the following features- <br>
 &nbsp;&nbsp;    4)Geospatial plotting of the tweets(country wise).<br>
     <br>
 It uses the module tweepy for the twitter API and the classifier used is Naive-Bayes Classifier.<br>
-The required python modules are contained in requirememts.txt.
+The required python modules are contained in requirements.txt.
 <br><br>
 gettweet.py gets the tweets based on user's searches. 
 <br>
