@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>analyze360</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='senti.png') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Bubbler+One" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='pace-theme-center-circle1.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+  <script src="{{ url_for('static', filename='pace.js') }}"></script>
+  {{ JSGlue.include() }}
+  <style>
+  /* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+}
+  path { 
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+  .bar0 {
+  fill: #17A697;
+}
+
+  .bar1 {
+  fill: #BFD4D9;
+}
+
+  .bar2 {
+  fill: #D93240;
+}
+
+/*Text class styling*/
+
+.text {
+  fill: #000000;
+  font-weight:bold; font-size:25px; font-family:Bubbler One,sans-serif;
+}
+  .noteg, .notey, .noter {
+  position: relative;
+  width: 190px;
+  padding: 1em 1.5em;
+  margin: 2em auto;
+  color: #fff;
+  background: #97C02F;
+  overflow: hidden;
+}
+.noteg.green {
+  background:#17A697;
+}
+.notey.yellow {
+  background:#BFD4D9;
+}
+.noter.red {
+  background:#D93240;
+}
+
+.noteg:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 16px 16px 0;
+  border-style: solid;
+  border-color: #fff #fff #658E15 #658E15;
+  background: #0F5959;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  /* Firefox 3.0 damage limitation */
+  display: block; width: 0;
+}
+.notey:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 16px 16px 0;
+  border-style: solid;
+  border-color: #fff #fff #658E15 #658E15;
+  background: #66a7d0;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  /* Firefox 3.0 damage limitation */
+  display: block; width: 0;
+}
+.noter:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 16px 16px 0;
+  border-style: solid;
+  border-color: #fff #fff #658E15 #658E15;
+  background: #942016;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  /* Firefox 3.0 damage limitation */
+  display: block; width: 0;
+}
+
+.noteg.rounded, .noter.rounded, .notey.rounded {
+  -moz-border-radius: 5px 0 5px 5px;
+  border-radius: 5px 0 5px 5px;
+}
+
+.noteg.rounded:before {
+  border-width: 8px;
+  border-color: #fff #fff transparent transparent;
+  -moz-border-radius: 0 0 0 5px;
+  border-radius: 0 0 0 5px;
+}
+.notey.rounded:before {
+  border-width: 8px;
+  border-color: #fff #fff transparent transparent;
+  -moz-border-radius: 0 0 0 5px;
+  border-radius: 0 0 0 5px;
+}
+.noter.rounded:before {
+  border-width: 8px;
+  border-color: #fff #fff transparent transparent;
+  -moz-border-radius: 0 0 0 5px;
+  border-radius: 0 0 0 5px;
+}
+  #slider {
+	width: 178px;
+	margin-left: 5px;
+	margin-top:25px;
+  }
+  #custom-handle {
+    width: 3em;
+    height: 3em;
+    top: 50%;
+    margin-top: -1.5em;
+    text-align: center;
+    color:#000000;
+    line-height: 2.9em;
+    border-radius:1.4em;
+    background-color:#ffffff;
+    border-color:#aaaaaa;
+    outline:none;
+  }
+  #slider .ui-slider-range { 
+	background: #ff0000; 
+   }
+   #slider .ui-state-default, .ui-widget-content .ui-state-default {
+	background: none;
+	background-color: #FFF;
+}
+  
+  h1{
+    margin-left:2px;
+    font-size: 30px;
+    font-family: Bubbler One,sans-serif;
+  }
+  #footer {
+   text-align:center;
+   font-family: Montserrat, sans-serif;
+   font-size:18px;
+  }
+  #c {text-align:center; font-family:Bubbler One,sans-serif; font-size:30px;font-weight:bold;}
+  #f {font-weight:bold; font-size:20px; font-family:Bubbler One,sans-serif; margin:auto; width:350px;}
+  #g {font-weight:bold; font-family:Bubbler One,sans-serif;  margin-left:590px; margin-top:7px; width: 100px; margin:auto;}
+  #h {text-align:center; margin-top:5px; font-size:24px; font-family:Bubbler One,sans-serif;}
+  #i {text-align:center; font-family:Bubbler One,sans-serif; font-size:25px;font-weight:bold;visibility:hidden; background-color:#f6f6f6;}
+  #k {font-weight:bold; text-align:center; font-size:25px; font-family:Bubbler One,sans-serif;visibility:hidden;}
+  #l {margin-right:20px;}
+  #t {height:120px; width:120px; border-style:solid; border-radius:60px; border-color:#1da1f2; background-color:white; border-width:8px; position:absolute; top:60px; right:90px; text-align:center;visibility:hidden }
+  #v {position:absolute; left:26px;}
+  #w {margin-left:17px;}
+  .head {font-size:30px;}
+  #ds {text-align:center; font-family:Bubbler One,sans-serif; font-size:25px;font-weight:bold; visibility:hidden;}
+  #x {font-weight:bold; text-align:center; font-size:24px; font-family:Bubbler One,sans-serif;visibility:hidden;}
+  #y {visibility:hidden;background-color:#f6f6f6;}
+  #da {background-color:#f6f6f6; visibility:hidden;}
+  #dd {width:600px; height:500px; margin-left:230px; margin:auto; text-align:center; visibility:hidden;}
+  #slider {font-family:Bubbler One,sans-serif; margin-left:492px; margin-top: 6px; width:350px; margin:auto;}
+  #notes {text-align:center; font-weight:bold; font-size:23px; font-family:Bubbler One,sans-serif;visibility:hidden; }
+  #tutorial {position: relative; margin-right:60px; margin-top:0px;}
+  #map {width:100%; height: 600px; border-style:solid; border-color:black; border-width:5px; margin-bottom:40px;}
+  .tex {font-size:28px; font-family:Bubbler One,sans-serif;  margin-top:37px; margin-bottom:0px; font-weight:bold;}
+  .tex1 {font-size:15px; font-family:Bubbler One,sans-serif; font-weight:bold;}
+  .plot-container plotly {margin-left:20px;}
+  .mapboxgl-popup {
+    max-width: 400px;
+    font-size: 17px;
+    font-family:Bubbler One,sans-serif;
+    font-weight:bold;
+    }
+  #z {text-align:center; font-family:Bubbler One,sans-serif; font-size:25px;font-weight:bold; visibility:hidden;}
+      .navbar {
+      margin-bottom: 0;
+      background-color: #000000;
+      z-index: 9999;
+      border: 0;
+      font-size: 12px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      font-family: Montserrat, sans-serif;
+  }
+  .navbar li a, .navbar .navbar-brand {
+      color: #fff !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #f4511e !important;
+      background-color: #fff !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+  @media screen and (max-width: 800px) {
+    #t {height:100px; width:100px; border-style:solid; border-radius:50px; border-color:#1da1f2; background-color:white; border-width:8px;  position:absolute; top:60px; right:20px; text-align:center;visibility:hidden }
+    .tex {font-size:19px; font-family:Bubbler One,sans-serif;  margin-top:37px; margin-bottom:0px; font-weight:bold;}
+    .tex1 {font-size:13px; font-family:Bubbler One,sans-serif; font-weight:bold;}
+    #v {position:absolute; left:18px;}
+}
+  </style>
+</head>
+<body id="myPage">
+  
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+        </button>
+        <a class="navbar-brand" href="{{ url_for('index') }}">analyze360</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ url_for('get_analyze') }}">ANALYZE</a></li>
+          <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <br><br><br>
+<div class="container-fluid">
+  <div class="row">
+      <form id="myform">
+        <fieldset>
+            <div class="form-group" id="f">
+                <input id="o" autocomplete="off" autofocus class="form-control" name="query" placeholder="Search for any event" type="text"/>
+            </div>
+            <div id="h">
+            <p>Select a upper limit for the tweets</p>
+            </div>
+            <div id="slider">
+                  <div id="custom-handle" class="ui-slider-handle"></div>
+            </div>
+            <br>
+            <div class="form-group" id="g">
+              <button id="n" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-search"></span> Search
+              </button>
+            </div>
+        </fieldset>
+      </form>
+      <div id="t">
+            <img id="v" src="https://abs.twimg.com/icons/apple-touch-icon-192x192.png" height="50" width="50" x="30" y="40">
+      </div>
+  </div>  
+    <br><br>
+     <div id="c">
+      </div>
+      <div id="i" class="row">
+        <div class="col-sm-12 col-xs-12">
+        <br>
+          <div id="j">
+          <p class="head">OVERALL SENTIMENT LEVEL</p>
+          </div>
+            <canvas id="tutorial" width="380" height="220">
+			      Canvas not available.
+	          </canvas>
+        </div>
+      </div>
+      <br><br>
+        <div id="k" class="row" >
+          <div class="col-sm-12 col-xs-12">
+          <div>
+          <p class="head">SENTIMENT BREAKDOWN</p>
+          </div>
+          <div id="p">
+          <script src="{{ url_for('static', filename='chart125.js') }}"></script>
+          </div>
+          <div id="l">
+          </div>
+          </div>
+        </div>
+      <div id="notes" class="row">
+        <div class="col-sm-4 col-xs-4">
+          <div class="noteg green rounded">
+          </div>
+        </div>
+        <div class="col-sm-4 col-xs-4">
+          <div class="notey yellow rounded">
+          </div>
+        </div>
+        <div class="col-sm-4 col-xs-4">
+          <div class="noter red rounded">
+          </div>
+        </div>
+      </div>
+      <br><br>
+      <div id="da" class="row">
+        <div class="col-sm-12 col-xs-12">
+          <br><br>
+          <div id="ds">
+            <p class="head">PAST DAYS' ANALYSIS</p>
+          </div>
+          <div id="dd">
+            <script src="{{ url_for('static', filename='chart658.js') }}"></script>
+          </div>
+        </div>
+      </div>
+      <div id="x" class="row">
+        <div class="col-sm-12 col-xs-12">
+        <br>
+          <p class="head">MOST RECENT TWEET</p>
+          <br><br>
+        </div>
+      </div>
+      <br><br><br>
+      <div id="y" class="row">
+        <div class="col-sm-12 col-xs-12">
+          <br><br>
+          <div id="z">
+            <p class="head">GEOGRAPHIC DISTRIBUTION</p>
+          </div><br>
+          <div id="map">
+            <script src="{{ url_for('static', filename='map67.js') }}"></script>
+          </div>
+        </div>
+      </div> 
+      <div id="footer">
+       <p>&#169; 2017.&nbsp; analyze360. &nbsp;All Rights Reserved. </p>
+      </div>
+  <script src="{{ url_for('static', filename='functionality.js') }}"></script>
+    <script src="{{ url_for('static', filename='slider18.js') }}"></script>
+    <script src="{{ url_for('static', filename='level506.js') }}"></script>
+</body>
+</html>
+
+           

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>analyze360</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='senti.png') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Bubbler+One" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  /* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+}
+  #footer {
+   text-align:center;
+   font-family: Montserrat, sans-serif;
+   font-size:18px;
+  }
+  .jumbotron {
+      color: #fff;
+      padding: 100px 25px;
+      font-family: Montserrat, sans-serif;
+  }
+ .navbar {
+      margin-bottom: 0;
+      background-color: transparent;
+      z-index: 9999;
+      border: 1px;
+      font-weight:bold;
+      font-size: 15px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      border-color:#000000;
+      font-family: Montserrat, sans-serif;
+  }
+  .navbar li a, .navbar .navbar-brand {
+      color: #000000 !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #000000 !important;
+      background-color: transparent !important;
+       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.08);
+  }
+   .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+    </style>
+</head>
+
+<body id="myPage">
+  
+<nav class="navbar navbar-default navbar-fixed-top">
+   <div class="container-fluid">
+     <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>                        
+       </button>
+       <a class="navbar-brand" href="{{ url_for('index') }}">analyze360</a>
+     </div>
+     <div class="collapse navbar-collapse" id="myNavbar">
+       <ul class="nav navbar-nav navbar-right">
+         <li><a href="{{ url_for('get_analyze') }}">ANALYZE</a></li>
+         <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+       </ul>
+     </div>
+   </div>
+ </nav>
+
+
+<div>
+    <img src="{{url_for('static',filename='twitter.jpg') }}" style="opacity:1; width:100%;">
+</div>
+ 
+<div id="footer">
+ <p>&#169; 2017.&nbsp; analyze360. &nbsp;All Rights Reserved. </p>
+</div> 
