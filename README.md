@@ -1,4 +1,4 @@
-analyze360 is a web app based on sentimental analysis. It searches for tweets containing the topic typed in by the user and performs the required analysis on it.
+analyze360 is a web app(a python flask app) based on sentimental analysis. It searches for tweets containing the topic typed in by the user and performs the required analysis on it.
 <br><br>
 It has the following features- <br>
 &nbsp;&nbsp;   1)Overall sentiment level <br>
