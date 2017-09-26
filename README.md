@@ -13,6 +13,8 @@ gettweet.py gets the tweets based on user's searches.
 <br>
 application.py is the crux of the website backend where the real analysis of the tweets happens.
 <br><br>
+Procfile is a file required by heroku to deploy websites.
+<br><br>
 You need to install NLTK corpora using following command-<br>
 &nbsp;&nbsp;&nbsp;   python -m textblob.download_corpora
    <br><br>
